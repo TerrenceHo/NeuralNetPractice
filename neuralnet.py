@@ -75,3 +75,27 @@ def sigmoidGradient(z):
     return sigmoid(z) * (1-sigmoid(z))
 
 def predict(theta1, theta2):
+
+
+# Helper Functions.  These all flatten various thetas
+def flattenParams(thetas_list):
+    """
+    Hand this function a list of theta matrices, and it will flatten it
+    into one long (n,1) shaped numpy array
+    """
+    flattened_list = [ mytheta.flatten() for mytheta in thetas_list ]
+    combined =
+    list(itertools.chain.from_iterable(flattened_list))
+    assert len(combined) == (input_layer_size+1)*hidden_layer_size + \(hidden_layer_size+1)*output_layer_size
+    return np.array(combined).reshape((len(combined),1))
+
+def reshapeParams(flattened_array):
+    theta1 = flattened_array[:(input_layer_size+1)*hidden_layer_size] \.reshape((hidden_layer_size,input_layer_size+1))
+    theta2 = flattened_array[(input_layer_size+1)*hidden_layer_size:] \.reshape((output_layer_size,hidden_layer_size+1))
+    return [ theta1, theta2 ]
+
+def flattenX(myX):
+    return np.array(myX.flatten()).reshape((n_training_samples*(input_layer_size+1),1))
+
+def reshapeX(flattenedX):
+    return np.array(flattenedX).reshape((n_training_samples,input_layer_size+1))
