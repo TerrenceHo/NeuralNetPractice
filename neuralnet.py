@@ -65,10 +65,13 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
 	Theta2Grad = Theta2Grad * ((lambdaVar/m) * Theta2)
 
 def randInitWeights(layerIn, layerOut):
-
+    epsilon_init = 0.12
+    return rand(layerIn, 1 + layerIn) * 2 * episilon_init - epsilon_init
 
 def sigmoid(z):
-
+    g = 1.0/(1.0 + exp(z))
+    return g
 def sigmoidGradient(z):
+    return sigmoid(z) * (1-sigmoid(z))
 
 def predict(theta1, theta2):
