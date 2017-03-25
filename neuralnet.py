@@ -1,7 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import scipy.io
+import scipy.misc
+import scipy.optimize
+from scipy.special import expit
+import matplotlib.cm as cm
+import random
+import itertools
 
 def __init__(self):
 
