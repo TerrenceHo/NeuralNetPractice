@@ -11,6 +11,7 @@ import itertools
 
 def __init__(self):
 
+
 def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, lambdaVar):
 
 	# Flattens the Theta1, Theta2 from nn_params.
