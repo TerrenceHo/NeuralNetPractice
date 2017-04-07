@@ -31,8 +31,10 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
 	Theta1Grad = np.zeroes(np.shape(Theta1))
 	Theta2Grad = np.zeroes(np.shape(Theta2))
 
-	eye_matrix = np.eye(numLabels)
-	y_matrix = eye_matrix(y,:)
+        rows, cols = y.shape
+        y1 = np.zeros((rows, numLabels))
+        for i in range(0, rows):
+            y1[i, y[1]] = 1
 
 	a1 = np.concatenate((np.ones((m,1)), X),1)
 	z2 = a1 * Theta1.T
