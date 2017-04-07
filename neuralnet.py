@@ -19,7 +19,7 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
 	# Return Theta1Grad, Theta2Grad, and J the cost
 
 	# create eye matrix
-	# set y_matrix to y
+	# set y to y
 
 	# feed forward through the neural network
 
@@ -34,7 +34,7 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
         rows, cols = y.shape
         y1 = np.zeros((rows, numLabels))
         for i in range(0, rows):
-            y1[i, y[1]] = 1
+            y1[i, y[i]] = 1
 
 	a1 = np.concatenate((np.ones((m,1)), X),1)
 	z2 = a1 * Theta1.T
@@ -48,9 +48,9 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
 
 	r = (lambdaVar/(2 * m)) * (Theta1Reg + Theta2Reg)
 
-	J = (1/m) * np.sum(np.sum((-y_matrix) * log(h) - (1-y_matrix) * log(1-h))) + r
+	J = (1/m) * np.sum(np.sum((-y1) * log(h) - (1-y1) * log(1-h))) + r
 
-	d3 = a3 - y_matrix;
+	d3 = a3 - y1;
 	d2 = sigmoidGradient(z2) * (d3 * Theta2[:,1:])
 
 	Delta1 = d2.T * a1
