@@ -10,7 +10,7 @@ import random
 import itertools
 
 
-def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, lambdaVar):
+def nnCostFunction(mythetas_flat, myx_flat, mmy, my_lambda):
 
     # Flattens the Theta1, Theta2 from nn_params.
     # m = size(X,1)
@@ -29,31 +29,32 @@ def nnCostFunction(nn_params, inputLayerSize, hiddenLayerSize, numLabels, X, y, 
     Theta1Grad = np.zeros(np.shape(Theta1))
     Theta2Grad = np.zeros(np.shape(Theta2))
 
+    # Create y matrix for answers
     rows, cols = y.shape
     y1 = np.zeros((rows, numLabels))
     for i in range(0, rows):
         y1[i, y[i]] = 1
 
+    # Feed Forward Network
     a1 = np.concatenate((np.ones((m,1)), X),1)
-    z2 = a1 * Theta1.T
-    a2 = np.concatenate((np.ones((m,1)), sigmoid(z2)),1)
-    z3 = a2 * Theta2.T
-    a3 = sigmoid(z3)
+    z2 = a1.dot(Theta1.T)
+    a2 = np.concatenate((np.ones((m,1)), expit(z2)),1)
+    z3 = a2.dot(Theta2.T)
+    a3 = expit(z3)
     h = a3
 
     Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
     Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
 
-def backPropagate(mythetas_flat, myx_flat, mmy, lambda):
     r = (lambdaVar/(2 * m)) * (Theta1Reg + Theta2Reg)
 
     J = (1/m) * np.sum(np.sum((-y1) * log(h) - (1-y1) * log(1-h))) + r
 
     d3 = a3 - y1;
-    d2 = sigmoidGradient(z2) * (d3 * Theta2[:,1:])
+    d2 = expit(z2).dot(d3 * Theta2[:,1:])
 
-    Delta1 = d2.T * a1
-    Delta2 = d3.T * a2
+    Delta1 = d2.T.dot(a1)
+    Delta2 = d3.T.dot(a2)
 
     Theta1Grad = (1/m) * Delta1
     Theta2Grad = (1/m) * Delta2
