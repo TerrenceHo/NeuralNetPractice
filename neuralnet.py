@@ -54,12 +54,12 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     a3 = expit(z3)
     h = a3
 
-    # Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
-    # Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
+    Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
+    Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
 
-    # r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg)
+    r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg)
 
-    J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h)))
+    J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r
 
     # d3 = a3 - y1;
     # d2 = expit(z2).dot(d3 * Theta2[:,1:])
