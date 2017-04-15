@@ -33,9 +33,10 @@ def main():
                                   (hidden_size, (input_size + 1))))
     theta2 = np.matrix(np.reshape(params[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1))))
-    cost = nnCostFunction(params, input_size, hidden_size, num_labels, X,
+    cost, grad = nnCostFunction(params, input_size, hidden_size, num_labels, X,
                           y_onehot, learning_rate)
     print(cost)
+    print(grad.shape)
 
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
@@ -61,24 +62,24 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
 
     J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r
 
-    # d3 = a3 - y1;
-    # d2 = expit(z2).dot(d3 * Theta2[:,1:])
+    d3 = a3 - y
+    d2 = sigmoidGradient(z2) * (d3.dot(Theta2[:,1:]))
 
-    # Delta1 = d2.T.dot(a1)
-    # Delta2 = d3.T.dot(a2)
+    Delta1 = d2.T.dot(a1)
+    Delta2 = d3.T.dot(a2)
 
-    # Theta1Grad = (1/m) * Delta1
-    # Theta2Grad = (1/m) * Delta2
+    Theta1Grad = (1/m) * Delta1
+    Theta2Grad = (1/m) * Delta2
 
 
     # #CHECK
-    # Theta1[:,0] = 0
-    # Theta2[:,0] = 0
+    Theta1[:,0] = 0
+    Theta2[:,0] = 0
 
-    # Theta1Grad = Theta1Grad + ((lambdaVar/m) * Theta1)
-    # Theta2Grad = Theta2Grad * ((lambdaVar/m) * Theta2)
-
-    return J
+    Theta1Grad = Theta1Grad + ((learning_rate/m) * Theta1)
+    Theta2Grad = Theta2Grad * ((learning_rate/m) * Theta2)
+    grad = np.concatenate((np.ravel(Theta1Grad), np.ravel(Theta2)))
+    return J, grad
 
 
 def sigmoidGradient(z):
