@@ -47,11 +47,11 @@ def main():
                                   (num_labels, (hidden_size + 1)))
 
     print("Predicting Accuracy")
-    a1, z2, a2, z3, h = forward_propagate(X, theta1, theta2)
+    a1, z2, a2, z3, h = forwardProp(X, theta1, theta2)
     y_pred = np.array(np.argmax(h, axis=1) + 1)
     correct = [1 if a == b else 0 for (a, b) in zip(y_pred, y)]
     accuracy = (sum(map(int, correct)) / float(len(correct)))
-    print 'accuracy = {0}%'.format(accuracy * 100)
+    print('Accuracy = {0}%'.format(accuracy * 100))
 
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
@@ -111,9 +111,6 @@ def forwardProp(X, theta1, theta2):
 def sigmoidGradient(z):
     d = expit(z)
     return d*(1-d)
-
-def predict(theta1, theta2):
-    print("Predict")
 
 if __name__ == '__main__':
     main()
