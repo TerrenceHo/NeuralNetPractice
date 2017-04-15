@@ -4,6 +4,7 @@ import pandas as pd
 from scipy.io import loadmat
 from scipy.special import expit
 from sklearn.preprocessing import OneHotEncoder
+from scipy.optimize import minimize
 #May use these
 # import scipy.misc
 # import scipy.optimize
@@ -33,10 +34,12 @@ def main():
                                   (hidden_size, (input_size + 1))))
     theta2 = np.matrix(np.reshape(params[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1))))
-    cost, grad = nnCostFunction(params, input_size, hidden_size, num_labels, X,
-                          y_onehot, learning_rate)
-    print(cost)
-    print(grad.shape)
+
+    print("Starting Neural Net Training")
+    fmin = minimize(fun=nnCostFunction, x0=params, args=(input_size, hidden_size,
+        num_labels, X, y_onehot, learning_rate), method='TNC', jac=True,
+        options={'maxiter': 250})
+    print(fmin)
 
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
