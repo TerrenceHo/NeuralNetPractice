@@ -68,17 +68,20 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     Delta1 = d2.T.dot(a1)
     Delta2 = d3.T.dot(a2)
 
+    # computing weights from backprob derivatives
     Theta1Grad = (1/m) * Delta1
     Theta2Grad = (1/m) * Delta2
 
-
-    # #CHECK
+    # regularizing the backprop
     Theta1[:,0] = 0
     Theta2[:,0] = 0
 
+    # Getting new weights
     Theta1Grad = Theta1Grad + ((learning_rate/m) * Theta1)
-    Theta2Grad = Theta2Grad * ((learning_rate/m) * Theta2)
+    Theta2Grad = Theta2Grad + ((learning_rate/m) * Theta2)
     grad = np.concatenate((np.ravel(Theta1Grad), np.ravel(Theta2)))
+
+    # Return both the weights and the cost
     return J, grad
 
 
