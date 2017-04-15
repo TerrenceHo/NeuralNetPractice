@@ -41,6 +41,18 @@ def main():
         options={'maxiter': 250})
     print(fmin)
 
+    theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
+                                  (hidden_size, (input_size + 1)))
+    theta2 = np.reshape(fmin.x[hidden_size * (input_size + 1):],
+                                  (num_labels, (hidden_size + 1)))
+
+    print("Predicting Accuracy")
+    a1, z2, a2, z3, h = forward_propagate(X, theta1, theta2)
+    y_pred = np.array(np.argmax(h, axis=1) + 1)
+    correct = [1 if a == b else 0 for (a, b) in zip(y_pred, y)]
+    accuracy = (sum(map(int, correct)) / float(len(correct)))
+    print 'accuracy = {0}%'.format(accuracy * 100)
+
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
     #reshape parameters
@@ -87,6 +99,14 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     # Return both the weights and the cost
     return J, grad
 
+def forwardProp(X, theta1, theta2):
+    m = X.shape[0]
+    a1 = np.insert(X, 0, values=np.ones(m), axis=1)
+    z2 = a1.dot(theta1.T)
+    a2 = np.insert(expit(z2), 0, values=np.ones(m), axis=1)
+    z3 = a2.dot(theta2.T)
+    h = expit(z3)
+    return a1, z2, a2, z3, h
 
 def sigmoidGradient(z):
     d = expit(z)
