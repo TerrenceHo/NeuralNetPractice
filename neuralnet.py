@@ -1,22 +1,15 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
 from scipy.io import loadmat
 from scipy.special import expit
 from sklearn.preprocessing import OneHotEncoder
 from scipy.optimize import minimize
-#May use these
-# import scipy.misc
-# import scipy.optimize
-# import matplotlib.cm as cm
-# import random
-# import itertools
 
 #Global Variables
 input_size = 400
 hidden_size = 25
 num_labels = 10
 learning_rate = 1
+iterations = 250
 
 def main():
     print("Loading Data")
@@ -35,10 +28,11 @@ def main():
     theta2 = np.matrix(np.reshape(params[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1))))
 
-    print("Starting Neural Net Training")
+    print("Start Neural Net Training")
+    input("Press Enter to continue...")
     fmin = minimize(fun=nnCostFunction, x0=params, args=(input_size, hidden_size,
         num_labels, X, y_onehot, learning_rate), method='TNC', jac=True,
-        options={'maxiter': 250})
+        options={'maxiter': iterations})
     print(fmin)
 
     theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
@@ -46,7 +40,8 @@ def main():
     theta2 = np.reshape(fmin.x[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1)))
 
-    print("Predicting Accuracy")
+    print("Predict Accuracy")
+    input("Press Enter to continue...")
     a1, z2, a2, z3, h = forwardProp(X, theta1, theta2)
     y_pred = np.array(np.argmax(h, axis=1) + 1)
     correct = [1 if a == b else 0 for (a, b) in zip(y_pred, y)]
