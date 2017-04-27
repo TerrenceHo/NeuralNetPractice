@@ -136,7 +136,7 @@ def checkGradients():
     Theta2 = debugInitializeWeights(labels, hidden_layer_size)
     # Reusing debugInitializeWeights to generate X
     X  = debugInitializeWeights(m, input_layer_size - 1)
-    y  = np.array([[1], [2], [3], [2], [1]]) 
+    y  = np.array([[2], [3], [1], [2], [3]]) 
 
     nn_params = np.concatenate((Theta1.reshape(Theta1.size, order='F'),
                                 Theta2.reshape(Theta2.size, order='F')))
