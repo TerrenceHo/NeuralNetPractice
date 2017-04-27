@@ -11,7 +11,6 @@ hidden_size = 25
 num_labels = 10
 learning_rate = 1
 iterations = 250
-iter_count = 1
 
 def main():
     print("Loading Data")
@@ -96,7 +95,7 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     Theta1Grad = Theta1Grad + ((learning_rate/m) * Theta1)
     Theta2Grad = Theta2Grad + ((learning_rate/m) * Theta2)
     # return weights as one parameter
-    grad = np.concatenate((np.ravel(Theta1Grad), np.ravel(Theta2)))
+    grad = np.concatenate((np.ravel(Theta1Grad), np.ravel(Theta2Grad)))
 
     # Return both the weights and the cost
     return J, grad
