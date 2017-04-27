@@ -3,6 +3,7 @@ from scipy.io import loadmat
 from scipy.special import expit
 from sklearn.preprocessing import OneHotEncoder
 from scipy.optimize import minimize
+from decimal import Decimal
 
 #Global Variables
 input_size = 400
@@ -67,7 +68,7 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
 
     J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r
 
-    d3 = a3 - y
+    d3 = h - y
     d2 = sigmoidGradient(z2) * (d3.dot(Theta2[:,1:]))
 
     Delta1 = d2.T.dot(a1)
@@ -112,7 +113,7 @@ def computeNumericalGradient(J, theta):
     perturb = np.zeros( theta.shape )
     e = 1e-4
 
-    for p in xrange(theta.size):
+    for p in range(theta.size):
         # Set perturbation vector
         perturb.reshape(perturb.size, order="F")[p] = e
         loss1, _ = J(theta - perturb)
@@ -123,7 +124,7 @@ def computeNumericalGradient(J, theta):
 
     return numgrad
 
-def checkGradients:
+def checkGradients():
     lambda_reg = 0
     input_layer_size = 3
     hidden_layer_size = 5
@@ -132,17 +133,17 @@ def checkGradients:
 
     # We generate some 'random' test data
     Theta1 = debugInitializeWeights(hidden_layer_size, input_layer_size)
-    Theta2 = debugInitializeWeights(num_labels, hidden_layer_size)
+    Theta2 = debugInitializeWeights(labels, hidden_layer_size)
     # Reusing debugInitializeWeights to generate X
-    X  = diw.debugInitializeWeights(m, input_layer_size - 1)
-    y  = 1 + np.mod(range(m), num_labels).T
+    X  = debugInitializeWeights(m, input_layer_size - 1)
+    y  = np.array([[1], [2], [3], [2], [1]]) 
 
     nn_params = np.concatenate((Theta1.reshape(Theta1.size, order='F'),
                                 Theta2.reshape(Theta2.size, order='F')))
 
     def costFunc(p):
-    return nnCostFunction(p, input_layer_size, hidden_layer_size, \
-                   num_labels, X, y, lambda_reg)
+        return nnCostFunction(p, input_layer_size, hidden_layer_size, \
+                   labels, X, y, lambda_reg)
 
     _, grad = costFunc(nn_params)
     numgrad = computeNumericalGradient(costFunc, nn_params)
@@ -152,15 +153,14 @@ def checkGradients:
     for numerical, analytical in zip(numgrad, grad):
         print(fmt.format(numerical, analytical))
 
-    print('The above two columns you get should be very similar.\n' \
-             '(Left Col.: Your Numerical Gradient, Right Col.: Analytical
-          Gradient)')
+    print('The above two columns you get should be very similar.\n'
+        '(Left Col.: Your Numerical Gradient, Right Col.: Analytical Gradient)')
 
     diff = Decimal(np.linalg.norm(numgrad-grad))/Decimal(np.linalg.norm(numgrad+grad))
 
     print('If your backpropagation implementation is correct, then \n' \
-             'the relative difference will be small (less than 1e-9). \n' \
-             '\nRelative Difference: {:.10E}'.format(diff))
+        'the relative difference will be small (less than 1e-9). \n' \
+        '\nRelative Difference: {:.10E}'.format(diff))
 
 if __name__ == '__main__':
     main()
@@ -174,4 +174,4 @@ if __name__ == '__main__':
 
 
 
-    
+
