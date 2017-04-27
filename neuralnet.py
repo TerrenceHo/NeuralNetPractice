@@ -16,19 +16,20 @@ iter_count = 1
 def main():
     print("Loading Data")
     datafile = 'data.mat'
-    mat = loadmat(datafile)
-    X, y = mat['X'], mat['y']
-    y[y==10] = 0
+    mat = loadmat(datafile) # loads data
+    X, y = mat['X'], mat['y'] # Get X, y values
+    y[y==10] = 0 # transform 10 to zero, easier prediction
     m = X[0].shape
-    encoder = OneHotEncoder(sparse = False)
+    encoder = OneHotEncoder(sparse = False) # get matrix of y for comparison
     y_onehot = encoder.fit_transform(y)
 
+    # get neural net weights 
     params = (np.random.random(size=hidden_size * (input_size + 1) + num_labels
                                * (hidden_size + 1)) - 0.5) * 0.25
-    theta1 = np.matrix(np.reshape(params[:hidden_size * (input_size + 1)],
-                                  (hidden_size, (input_size + 1))))
-    theta2 = np.matrix(np.reshape(params[hidden_size * (input_size + 1):],
-                                  (num_labels, (hidden_size + 1))))
+    theta1 = np.reshape(params[:hidden_size * (input_size + 1)],
+                                  (hidden_size, (input_size + 1)))
+    theta2 = np.reshape(params[hidden_size * (input_size + 1):],
+                                  (num_labels, (hidden_size + 1)))
 
     print("Start Neural Net Training")
     input("Press Enter to continue...")
@@ -37,11 +38,13 @@ def main():
         method='TNC', jac=True, options={'maxiter': iterations})
     print(fmin)
 
+    # get back the weights calculated from neural net 
     theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
                                   (hidden_size, (input_size + 1)))
     theta2 = np.reshape(fmin.x[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1)))
 
+    # Forward prop thorugh weights to compute training accuracy
     print("Predict Accuracy")
     input("Press Enter to continue...")
     a1, z2, a2, z3, h = forwardProp(X, theta1, theta2)
@@ -52,24 +55,27 @@ def main():
 
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
-    #reshape parameters
+    #reshape parameters that were flattened
     Theta1 = np.reshape(params[:hidden_size * (input_size + 1)],
                                   (hidden_size, (input_size + 1)))
     Theta2 = np.reshape(params[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1)))
-    m = X.shape[0]
+    m = X.shape[0] # size of X 
 
     # Feed Forward Network
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
 
+    # regularize terms
     Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
     Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
 
-    r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg)
+    r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg) # reg term for cost
 
-    J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r
+    J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r #cost
+
     print("Cost: %f" % (J))
 
+    # Starting Backpropagation
     # calculate sigmas
     d3 = h - y
     d2 = sigmoidGradient(z2) * (d3.dot(Theta2[:,1:]))
@@ -89,6 +95,7 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     # Getting new weights
     Theta1Grad = Theta1Grad + ((learning_rate/m) * Theta1)
     Theta2Grad = Theta2Grad + ((learning_rate/m) * Theta2)
+    # return weights as one parameter
     grad = np.concatenate((np.ravel(Theta1Grad), np.ravel(Theta2)))
 
     # Return both the weights and the cost
@@ -140,7 +147,7 @@ def checkGradients():
     Theta2 = debugInitializeWeights(labels, hidden_layer_size)
     # Reusing debugInitializeWeights to generate X
     X  = debugInitializeWeights(m, input_layer_size - 1)
-    y  = np.array([[2], [3], [1], [2], [3]]) 
+    y  = np.array([[2], [3], [1], [2], [3]])
 
     nn_params = np.concatenate((Theta1.reshape(Theta1.size, order='F'),
                                 Theta2.reshape(Theta2.size, order='F')))
