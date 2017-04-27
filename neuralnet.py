@@ -25,10 +25,6 @@ def main():
     # get neural net weights 
     params = (np.random.random(size=hidden_size * (input_size + 1) + num_labels
                                * (hidden_size + 1)) - 0.5) * 0.25
-    theta1 = np.reshape(params[:hidden_size * (input_size + 1)],
-                                  (hidden_size, (input_size + 1)))
-    theta2 = np.reshape(params[hidden_size * (input_size + 1):],
-                                  (num_labels, (hidden_size + 1)))
 
     print("Start Neural Net Training")
     input("Press Enter to continue...")
@@ -38,15 +34,15 @@ def main():
     print(fmin)
 
     # get back the weights calculated from neural net 
-    theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
+    Theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
                                   (hidden_size, (input_size + 1)))
-    theta2 = np.reshape(fmin.x[hidden_size * (input_size + 1):],
+    Theta2 = np.reshape(fmin.x[hidden_size * (input_size + 1):],
                                   (num_labels, (hidden_size + 1)))
 
     # Forward prop thorugh weights to compute training accuracy
     print("Predict Accuracy")
     input("Press Enter to continue...")
-    a1, z2, a2, z3, h = forwardProp(X, theta1, theta2)
+    a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
     y_pred = np.array(np.argmax(h, axis=1) + 1)
     correct = [1 if a == b else 0 for (a, b) in zip(y_pred, y)]
     accuracy = (sum(map(int, correct)) / float(len(correct)))
@@ -65,8 +61,10 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
 
     # regularize terms
-    Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
-    Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
+    # Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
+    # Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
+    Theta1Reg = np.sum(np.square(Theta1[:,1:]))
+    Theta2Reg = np.sum(np.square(Theta2[:,1:]))
 
     r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg) # reg term for cost
 
