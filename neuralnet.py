@@ -11,6 +11,7 @@ hidden_size = 25
 num_labels = 10
 learning_rate = 1
 iterations = 250
+iter_count = 1
 
 def main():
     print("Loading Data")
@@ -31,9 +32,9 @@ def main():
 
     print("Start Neural Net Training")
     input("Press Enter to continue...")
-    fmin = minimize(fun=nnCostFunction, x0=params, args=(input_size, hidden_size,
-        num_labels, X, y_onehot, learning_rate), method='TNC', jac=True,
-        options={'maxiter': iterations})
+    myArgs = (input_size, hidden_size, num_labels, X, y_onehot, learning_rate)
+    fmin = minimize(fun=nnCostFunction, x0=params, args= myArgs,
+        method='TNC', jac=True, options={'maxiter': iterations})
     print(fmin)
 
     theta1 = np.reshape(fmin.x[:hidden_size * (input_size + 1)],
@@ -67,10 +68,13 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg)
 
     J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r
+    print("Cost: %f" % (J))
 
+    # calculate sigmas
     d3 = h - y
     d2 = sigmoidGradient(z2) * (d3.dot(Theta2[:,1:]))
 
+    # calculate differences in weights
     Delta1 = d2.T.dot(a1)
     Delta2 = d3.T.dot(a2)
 
