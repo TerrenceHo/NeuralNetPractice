@@ -5,15 +5,17 @@ from scipy.special import expit
 from sklearn.preprocessing import OneHotEncoder
 from scipy.optimize import minimize
 from decimal import Decimal
+import os
 
 #Global Variables
 input_size = 400
-hidden_size = 40 
+hidden_size = 25
 num_labels = 10
-learning_rate = .1
+learning_rate = 1
 iterations = 1000
 
 def main():
+    os.system("clear")
     print("Loading Data")
     datafile = 'data.mat'
     mat = loadmat(datafile) # loads data
