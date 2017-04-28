@@ -9,7 +9,7 @@ from decimal import Decimal
 input_size = 400
 hidden_size = 25
 num_labels = 10
-learning_rate = 1
+learning_rate = .3
 iterations = 250
 
 def main():
@@ -40,6 +40,7 @@ def main():
                                   (num_labels, (hidden_size + 1)))
 
     # Forward prop thorugh weights to compute training accuracy
+
     print("Predict Accuracy")
     input("Press Enter to continue...")
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
@@ -70,7 +71,7 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
 
     J = (1/m) * np.sum(np.sum((-y) * np.log(h) - (1-y) * np.log(1-h))) + r #cost
 
-    print("Cost: %f" % (J))
+    print("Cost: %f" % J)
 
     # Starting Backpropagation
     # calculate sigmas
