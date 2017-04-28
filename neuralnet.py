@@ -7,14 +7,15 @@ from scipy.optimize import minimize
 from decimal import Decimal
 import os
 
-#Global Variables
-input_size = 400
-hidden_size = 25
-num_labels = 10
-learning_rate = 1
-iterations = 1000
 
 def main():
+    # Variables
+    input_size = 400
+    hidden_size = 25
+    num_labels = 10
+    learning_rate = 1
+    iterations = 1000
+
     os.system("clear")
     print("Loading Data")
     datafile = 'data.mat'
@@ -24,7 +25,8 @@ def main():
     m = X[0].shape
     encoder = OneHotEncoder(sparse = False) # get matrix of y for comparison
     y_onehot = encoder.fit_transform(y)
-
+    print("Load Initial Weights")
+    input("Press Enter to continue")
     # get neural net weights 
     Theta1 = randInitializeWeights(input_size, hidden_size)
     Theta2 = randInitializeWeights(hidden_size, num_labels)
