@@ -1,4 +1,5 @@
 from scipy.io import loadmat
+from scipy.io import savemat
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import expit
@@ -16,8 +17,9 @@ def main():
     learning_rate = 1
     iterations = 1000
 
+    #Load Data/Separate into pieces
     os.system("clear")
-    print("Loading Data")
+    print("Loading Data...")
     datafile = 'data.mat'
     mat = loadmat(datafile) # loads data
     X, y = mat['X'], mat['y'] # Get X, y values
@@ -25,8 +27,11 @@ def main():
     m = X[0].shape
     encoder = OneHotEncoder(sparse = False) # get matrix of y for comparison
     y_onehot = encoder.fit_transform(y)
+
+
     print("Load Initial Weights")
-    input("Press Enter to continue")
+    input("Press Enter to continue...")
+
     # get neural net weights 
     Theta1 = randInitializeWeights(input_size, hidden_size)
     Theta2 = randInitializeWeights(hidden_size, num_labels)
@@ -34,6 +39,7 @@ def main():
     # params = (np.random.random(size=hidden_size * (input_size + 1) + num_labels
     #                            * (hidden_size + 1)) - 0.5) * 0.25
 
+    # Call minimize function to train neural network
     print("Start Neural Net Training")
     input("Press Enter to continue...")
     myArgs = (input_size, hidden_size, num_labels, X, y_onehot, learning_rate)
@@ -48,7 +54,6 @@ def main():
                                   (num_labels, (hidden_size + 1)))
 
     # Forward prop thorugh weights to compute training accuracy
-
     print("Predict Accuracy")
     input("Press Enter to continue...")
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
@@ -56,6 +61,10 @@ def main():
     correct = [1 if a == b else 0 for (a, b) in zip(y_pred, y)]
     accuracy = (sum(map(int, correct)) / float(len(correct)))
     print('Accuracy = {0}%'.format(accuracy * 100))
+
+    # Saving model to be used later
+    savemat('model.mat', {'Theta1':Theta1, 'Theta2':Theta2})
+
 
 def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
                    learning_rate):
