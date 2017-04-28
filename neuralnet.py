@@ -17,7 +17,7 @@ def main():
     datafile = 'data.mat'
     mat = loadmat(datafile) # loads data
     X, y = mat['X'], mat['y'] # Get X, y values
-    y[y==10] = 0 # transform 10 to zero, easier prediction
+    # y[y==10] = 0 # transform 10 to zero, easier prediction
     m = X[0].shape
     encoder = OneHotEncoder(sparse = False) # get matrix of y for comparison
     y_onehot = encoder.fit_transform(y)
