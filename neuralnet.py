@@ -1,5 +1,6 @@
-import numpy as np
 from scipy.io import loadmat
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy.special import expit
 from sklearn.preprocessing import OneHotEncoder
 from scipy.optimize import minimize
@@ -7,10 +8,10 @@ from decimal import Decimal
 
 #Global Variables
 input_size = 400
-hidden_size = 25
+hidden_size = 40 
 num_labels = 10
-learning_rate = .3
-iterations = 250
+learning_rate = .1
+iterations = 1000
 
 def main():
     print("Loading Data")
@@ -23,8 +24,11 @@ def main():
     y_onehot = encoder.fit_transform(y)
 
     # get neural net weights 
-    params = (np.random.random(size=hidden_size * (input_size + 1) + num_labels
-                               * (hidden_size + 1)) - 0.5) * 0.25
+    Theta1 = randInitializeWeights(input_size, hidden_size)
+    Theta2 = randInitializeWeights(hidden_size, num_labels)
+    params = np.concatenate((np.ravel(Theta1), np.ravel(Theta2)))
+    # params = (np.random.random(size=hidden_size * (input_size + 1) + num_labels
+    #                            * (hidden_size + 1)) - 0.5) * 0.25
 
     print("Start Neural Net Training")
     input("Press Enter to continue...")
@@ -62,10 +66,10 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
 
     # regularize terms
-    # Theta1Reg = np.sum(np.sum(Theta1[:,1:]) ** 2)
-    # Theta2Reg = np.sum(np.sum(Theta2[:,1:]) ** 2)
-    Theta1Reg = np.sum(np.square(Theta1[:,1:]))
-    Theta2Reg = np.sum(np.square(Theta2[:,1:]))
+    Theta1Reg = np.sum(np.sum(np.square(Theta1[:,1:])) )
+    Theta2Reg = np.sum(np.sum(np.square(Theta2[:,1:])) )
+    # Theta1Reg = np.sum(np.square(Theta1[:,1:]))
+    # Theta2Reg = np.sum(np.square(Theta2[:,1:]))
 
     r = (learning_rate/(2 * m)) * (Theta1Reg + Theta2Reg) # reg term for cost
 
@@ -111,6 +115,12 @@ def forwardProp(X, theta1, theta2):
 def sigmoidGradient(z):
     d = expit(z)
     return d*(1-d)
+
+def randInitializeWeights(L_in, L_out):
+    W = np.zeros((L_out, 1 + L_in))
+    epsilon_init = 0.12
+    W = np.random.rand(L_out, 1 + L_in)*(2*epsilon_init) - epsilon_init
+    return W
 
 def debugInitializeWeights(fan_out, fan_in):
     W = np.zeros((fan_out, 1 + fan_in))
