@@ -14,7 +14,7 @@ from scipy.misc import imresize, imshow, imsave
 # sklearn model.predict
 
 d_size = 500  # draw image size, 500x500 canvas
-f_size = 20   # final image size, want 28x28
+f_size = 20   # final image size, want 20x20
 
 class Paint:
     def __init__(self):
@@ -76,7 +76,8 @@ class Paint:
         cols = np.any(img, axis=0)
         rmin, rmax = np.where(rows)[0][[0, -1]]
         cmin, cmax = np.where(cols)[0][[0, -1]]
-        return img[rmin:rmax, cmin:cmax]
+        print("rmin=%d, rmax=%d, cmin=%d, cmax=%d" %(rmin, rmax, cmin, cmax))
+        return img[rmin-25:rmax+25, cmin-25:cmax+25]
 
 if __name__ == "__main__":
     p = Paint()
