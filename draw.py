@@ -14,7 +14,7 @@ from scipy.misc import imresize, imshow, imsave
 # sklearn model.predict
 
 d_size = 500  # draw image size, 500x500 canvas
-f_size = 28   # final image size, want 28x28
+f_size = 20   # final image size, want 28x28
 
 class Paint:
     def __init__(self):

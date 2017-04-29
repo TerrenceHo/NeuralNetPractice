@@ -19,7 +19,10 @@ def main():
     plt.show()
 
     im_vec = im_arr.reshape(1, -1)
-
+    a1, z2, z2, z3, h = forwardProp(im_vec, Theta1, Theta2)
+    y_pred = np.array(np.argmax(h, axis=1) + 1)
+    print(h)
+    print(y_pred)
 
 if __name__ == '__main__':
     main()
