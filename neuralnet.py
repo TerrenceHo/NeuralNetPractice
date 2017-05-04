@@ -11,11 +11,11 @@ import os
 
 def main():
     # Variables
-    input_size = 400
-    hidden_size = 25
-    num_labels = 10
-    learning_rate = 1
-    iterations = 1000
+    input_size = 400 # size of image
+    hidden_size = 25 # size of hidden layer
+    num_labels = 10 # size of output later
+    learning_rate = 1 # how much gradient decreases by
+    iterations = 1000 # Put limit before stopping 
 
     #Load Data/Separate into pieces
     os.system("clear")
@@ -23,7 +23,7 @@ def main():
     datafile = 'data.mat'
     mat = loadmat(datafile) # loads data
     X, y = mat['X'], mat['y'] # Get X, y values
-    # y[y==10] = 0 # transform 10 to zero, easier prediction
+    # y[y==10] = 0 # transform 10 to zero, easier prediction !!! doesn't work
     m = X[0].shape
     encoder = OneHotEncoder(sparse = False) # get matrix of y for comparison
     y_onehot = encoder.fit_transform(y)
@@ -91,7 +91,7 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     print("Cost: %f" % J)
 
     # Starting Backpropagation
-    # calculate sigmas
+    # calculate deltas
     d3 = h - y
     d2 = sigmoidGradient(z2) * (d3.dot(Theta2[:,1:]))
 
@@ -117,23 +117,28 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     return J, grad
 
 def forwardProp(X, theta1, theta2):
-    m = X.shape[0]
-    a1 = np.insert(X, 0, values=np.ones(m), axis=1)
-    z2 = a1.dot(theta1.T)
-    a2 = np.insert(expit(z2), 0, values=np.ones(m), axis=1)
-    z3 = a2.dot(theta2.T)
-    h = expit(z3)
+    m = X.shape[0] # size of x
+    a1 = np.insert(X, 0, values=np.ones(m), axis=1) #insert bias
+    z2 = a1.dot(theta1.T) # Pass through first weights
+    a2 = np.insert(expit(z2), 0, values=np.ones(m), axis=1) #insert bias
+    z3 = a2.dot(theta2.T) # pass through hidden layer's weights
+    h = expit(z3) # output
     return a1, z2, a2, z3, h
 
-def sigmoidGradient(z):
+def sigmoidGradient(z): # function to calculate sigmoid for gradients
     d = expit(z)
     return d*(1-d)
 
-def randInitializeWeights(L_in, L_out):
-    W = np.zeros((L_out, 1 + L_in))
-    epsilon_init = 0.12
+def randInitializeWeights(L_in, L_out): # randomly distribute weights
+    W = np.zeros((L_out, 1 + L_in)) # form weight vector
+    epsilon_init = 0.12 # factor by which randomness is generated
+    # generates weights
     W = np.random.rand(L_out, 1 + L_in)*(2*epsilon_init) - epsilon_init
-    return W
+    return W # return weights.
+
+
+# The following functions have nothing to do with the neural net, but helped debug
+# and see inside the neural net.
 
 def debugInitializeWeights(fan_out, fan_in):
     W = np.zeros((fan_out, 1 + fan_in))
@@ -195,7 +200,7 @@ def checkGradients():
         '\nRelative Difference: {:.10E}'.format(diff))
 
 if __name__ == '__main__':
-    main()
+    main() # run main to start neural net.
 
 
 
