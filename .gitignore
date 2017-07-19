@@ -1,3 +1,5 @@
 *.ipynb
 .*.swp
 .*.swo
+
+__pycache__/
