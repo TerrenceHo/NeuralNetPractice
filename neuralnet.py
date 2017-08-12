@@ -79,8 +79,8 @@ def nnCostFunction(params, input_size, hidden_size, num_labels, X, y,
     a1, z2, a2, z3, h = forwardProp(X, Theta1, Theta2)
 
     # regularize terms
-    Theta1Reg = np.sum(np.sum(np.square(Theta1[:,1:])) )
-    Theta2Reg = np.sum(np.sum(np.square(Theta2[:,1:])) )
+    Theta1Reg = np.sum(np.square(Theta1[:,1:])) 
+    Theta2Reg = np.sum(np.square(Theta2[:,1:]))
     # Theta1Reg = np.sum(np.square(Theta1[:,1:]))
     # Theta2Reg = np.sum(np.square(Theta2[:,1:]))
 
@@ -200,6 +200,7 @@ def checkGradients():
         '\nRelative Difference: {:.10E}'.format(diff))
 
 if __name__ == '__main__':
+    checkGradients()
     main() # run main to start neural net.
 
 
